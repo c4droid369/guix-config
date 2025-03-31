@@ -40,7 +40,7 @@
      #:options ("nodatacow" "compress=zstd:3" "autodefrag" "space_cache=v2")
      #:deps ((file-system->mapped-device (car file-systems))))
     ("@home" "/home"
-     #:options ("compress-zstd:1" "autodefrag"))
+     #:options ("compress=zstd:1" "autodefrag"))
     ("@swap" "/swap"
      #:options ("nodatacow"))
     ("@log" "/var/log"
@@ -70,7 +70,7 @@
   (initrd-modules (append (list "dm-crypt" "btrfs" "mptspi") %base-initrd-modules))
 
   (mapped-devices (list (mapped-device
-                         (source (uuid "8d3c1216-c11a-49cc-b6a1-3d809c53b6a7"))
+                         (source (uuid "f142aee1-7cdc-41e0-9d79-a6d70d962387"))
                          (target "cryptgnu")
                          (type luks-device-mapping))))
   (file-systems (cons*
@@ -81,7 +81,8 @@
                                  (device "/dev/sda1")
                                  (mount-point "/boot/efi")
                                  (type "vfat")
-                                 (needed-for-boot? #t))))))
+                                 (needed-for-boot? #t)))
+                         %base-file-systems)))
   (swap-devices (list (swap-space
 		       (target "/swap/swapfile")
 		       (dependencies file-systems))))
