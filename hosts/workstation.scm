@@ -1,12 +1,11 @@
 (define-module (hosts workstation)
-  ;; Guix Scheme library
   #:use-module (gnu)
   #:use-module (guix utils)
-  ;; Guix packages
+
   #:use-module (gnu packages bash)
   #:use-module (gnu packages certs)
   #:use-module (gnu packages shells)
-  ;; Guix services
+
   #:use-module (gnu services base)
   #:use-module (gnu services desktop)
   #:use-module (gnu services networking)
@@ -53,10 +52,10 @@
   (keyboard-layout (keyboard-layout "us"))
 
   (bootloader (bootloader-configuration
-	       (bootloader grub-efi-bootloader)
-	       (targets '("/boot/efi"))
-	       (timeout 5)
-	       (keyboard-layout keyboard-layout)))
+	           (bootloader grub-efi-bootloader)
+	           (targets '("/boot/efi"))
+	           (timeout 5)
+	           (keyboard-layout keyboard-layout)))
   (kernel-arguments '("rootfstype=btrfs"))
   (initrd (lambda (file-systems . rest)
             (apply base-initrd
@@ -80,38 +79,38 @@
                                  (needed-for-boot? #t)))
                          %base-file-systems)))
   (swap-devices (list (swap-space
-		       (target "/swap/swapfile")
-		       (dependencies file-systems))))
+		               (target "/swap/swapfile")
+		               (dependencies file-systems))))
   
   (users (cons (user-account
-		(name "c4droid")
-		(comment "Guix user")
-		(group "users")
-		(home-directory "/home/c4droid")
-		(shell #~(string-append #$bash "/bin/bash"))
-		(supplementary-groups '("wheel" "netdev" "input" "cdrom" "audio" "video" "tty")))
-	       %base-user-accounts))
+		        (name "c4droid")
+		        (comment "Guix user")
+		        (group "users")
+		        (home-directory "/home/c4droid")
+		        (shell #~(string-append #$bash "/bin/bash"))
+		        (supplementary-groups '("wheel" "netdev" "input" "cdrom" "audio" "video" "tty")))
+	           %base-user-accounts))
   
   (packages (append (map specification->package+output
-			 '("tmux"
-			   "git-minimal"
-			   "btrfs-progs"
-			   "gnupg"
-			   "curl"
-			   "wget"
-			   "dbus"
-			   "openssl"
-			   "dosfstools"))
-		    %base-packages))
+			             '("tmux"
+			               "git-minimal"
+			               "btrfs-progs"
+			               "gnupg"
+			               "curl"
+			               "wget"
+			               "dbus"
+			               "openssl"
+			               "dosfstools"))
+		            %base-packages))
   
   (services (append (list (service dhcp-client-service-type)
-			  (service openssh-service-type
-				   (openssh-configuration
-				    (x11-forwarding? #t)
-				    (permit-root-login #f)
-				    (password-authentication? #f)
-				    (public-key-authentication? #t)
-				    (authorized-keys
-				     `(("c4droid" ,(plain-file "c4droid" %person-key-c4droid))))))
+			              (service openssh-service-type
+				                   (openssh-configuration
+				                    (x11-forwarding? #t)
+				                    (permit-root-login #f)
+				                    (password-authentication? #f)
+				                    (public-key-authentication? #t)
+				                    (authorized-keys
+				                     `(("c4droid" ,(plain-file "c4droid" %person-key-c4droid))))))
                           (service elogind-service-type))
-		    %base-services)))
+		            %base-services)))

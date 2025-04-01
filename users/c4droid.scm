@@ -1,16 +1,15 @@
 (define-module (users c4droid)
-  ;; Guix scheme library
   #:use-module (guix gexp)
   #:use-module (guix utils)
-  ;; Guix home library
+
   #:use-module (gnu home)
-  ;; Guix home services
+
   #:use-module (gnu home services)
   #:use-module (gnu home services shepherd)
   #:use-module (gnu home services shells)
-  ;; Guix packages
+
   #:use-module (gnu packages)
-  ;; Guix services
+
   #:use-module (gnu services shepherd))
 
 ;; Dotfile directory
@@ -28,7 +27,13 @@
 
 (define %emacs-plugin
   (map specification->package+output
-       '("emacs-guix")))
+       '("emacs-setup"
+         "emacs-guix"
+         "emacs-evil"
+         "emacs-evil-collection"
+         "emacs-evil-surround"
+         "emacs-evil-commentary"
+         "emacs-devil")))
 
 (define %develop
   (map specification->package+output
