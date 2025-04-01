@@ -1,9 +1,4 @@
 (define-module (hosts workstation)
-  ;; Scheme library
-  #:use-module (srfi srfi-37)
-  #:use-module (ice-9 popen)
-  #:use-module (ice-9 rdelim)
-  #:use-module (ice-9 format)
   ;; Guix Scheme library
   #:use-module (gnu)
   #:use-module (guix utils)
@@ -13,6 +8,7 @@
   #:use-module (gnu packages shells)
   ;; Guix services
   #:use-module (gnu services base)
+  #:use-module (gnu services desktop)
   #:use-module (gnu services networking)
   #:use-module (gnu services ssh)
   #:use-module (gnu services dbus))
@@ -116,5 +112,6 @@
 				    (password-authentication? #f)
 				    (public-key-authentication? #t)
 				    (authorized-keys
-				     `(("c4droid" ,(plain-file "c4droid" %person-key-c4droid)))))))
+				     `(("c4droid" ,(plain-file "c4droid" %person-key-c4droid))))))
+                          (service elogind-service-type))
 		    %base-services)))
