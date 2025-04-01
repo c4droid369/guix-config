@@ -71,7 +71,8 @@ It allow user can be use god-mode with evil-mode.")
       (propagated-inputs `(("emacs-f" ,emacs-f)))
       (home-page "https://github.com/matsievskiysv/vimish-fold")
       (synopsis "Integration of vimish-fold with evil")
-      (description "Add standard vim keybindings to create and delete folds respectively.")
+      (description
+       "Add standard vim keybindings to create and delete folds respectively.")
       (license license:gpl2))))
 
 (define-public emacs-evil-vimish-fold
@@ -94,5 +95,6 @@ It allow user can be use god-mode with evil-mode.")
                            ("emacs-vimish-fold" ,emacs-vimish-fold)))
       (home-page "https://github.com/alexmurray/evil-vimish-fold")
       (synopsis "Integration of vimish-fold with evil")
-      (description "Add standard vim keybindings to create and delete folds respectively.")
+      (description
+       "Add standard vim keybindings to create and delete folds respectively.")
       (license license:gpl2))))

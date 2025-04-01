@@ -5,18 +5,16 @@
   #:use-module (gnu home)
 
   #:use-module (gnu home services)
+  #:use-module (gnu home services dotfiles)
   #:use-module (gnu home services shepherd)
   #:use-module (gnu home services shells)
 
   #:use-module (gnu packages)
 
+  #:use-module (gnu services)
   #:use-module (gnu services shepherd)
 
   #:use-module (packages emacs-xyz))
-
-;; Dotfile directory
-(define dotfiles
-  (string-append (current-source-directory) "/../dotfiles"))
 
 ;; Package category
 (define %networking
@@ -56,6 +54,14 @@
   (map specification->package+output
        '("ncurses" "tmux")))
 
+;; Home services
+(define %emacs-daemon
+  (shepherd-service
+   (provision '(emacs-daemon))
+   (documentation "Emacs daemon")
+   (start #~(make-forkexec-constructor '("emacs" "--fg-daemon")))
+   (stop #~(make-kill-destructor))))
+
 (home-environment
  (packages
   (append %networking
@@ -63,15 +69,16 @@
           %emacs-plugin
           %develop
           %utility))
- (services (append (list (service home-bash-service-type
-                                  (home-bash-configuration
-                                   (bashrc (list (local-file (string-append dotfiles "/bashrc"))))
-                                   (bash-profile (list (local-file (string-append dotfiles "/bash_profile"))))))
+ (services (append (list (service home-bash-service-type)
+                         (simple-service 'env-vars-services
+                                         home-environment-variables-service-type
+                                         `(("EDITOR" . "emacsclient -t")
+                                           ("VISUAL" . "emacsclient -t")))
                          (service home-shepherd-service-type
                                   (home-shepherd-configuration
-                                   (services (list (shepherd-service
-                                                    (provision '(emacs-daemon))
-                                                    (documentation "Emacs daemon")
-                                                    (start #~(make-forkexec-constructor '("emacs" "--fg-daemon")))
-                                                    (stop #~(make-kill-destructor))))))))
+                                   (services (list %emacs-daemon))))
+                         (service home-dotfiles-service-type
+                                  (home-dotfiles-configuration
+                                   (layout 'stow)
+                                   (directories `(,(string-append (current-source-directory) "/../dotfiles"))))))
                    %base-home-services)))
