@@ -125,7 +125,8 @@
 				                    (public-key-authentication? #t)
 				                    (authorized-keys
 				                     `(("c4droid" ,(plain-file "c4droid" %person-key-c4droid))))))
-                          (service elogind-service-type))
+                          (service elogind-service-type)
+                          (service openntpd-service-type))
 		            (modify-services %base-services
                       (guix-service-type config => (guix-configuration
                                                     (inherit config)
