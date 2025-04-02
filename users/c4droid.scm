@@ -8,8 +8,10 @@
   #:use-module (gnu home services dotfiles)
   #:use-module (gnu home services shepherd)
   #:use-module (gnu home services shells)
+  #:use-module (gnu home services gnupg)
 
   #:use-module (gnu packages)
+  #:use-module (gnu packages gnupg)
 
   #:use-module (gnu services)
   #:use-module (gnu services shepherd)
@@ -44,7 +46,9 @@
          "emacs-vimish-fold"
          "emacs-lispy"
          "emacs-lispyville"
-         "emacs-rainbow-delimiters")))
+         "emacs-rainbow-delimiters"
+         "emacs-pinentry"
+         "emacs-pass")))
 
 (define %develop
   (map specification->package+output
@@ -53,6 +57,12 @@
 (define %utility
   (map specification->package+output
        '("ncurses" "tmux")))
+
+(define %secrets
+  (map specification->package+output
+       '("gnupg"
+         "pinentry-emacs"
+         "password-store")))
 
 ;; Home services
 (define %emacs-daemon
@@ -68,9 +78,9 @@
           %editor
           %emacs-plugin
           %develop
-          %utility))
- (services (append (list (service home-bash-service-type)
-                         (simple-service 'env-vars-services
+          %utility
+          %secrets))
+ (services (append (list (simple-service 'env-vars-services
                                          home-environment-variables-service-type
                                          `(("EDITOR" . "emacsclient -t")
                                            ("VISUAL" . "emacsclient -t")))
@@ -79,6 +89,11 @@
                                    (services (list %emacs-daemon))))
                          (service home-dotfiles-service-type
                                   (home-dotfiles-configuration
-                                   (layout 'stow)
-                                   (directories `(,(string-append (current-source-directory) "/../dotfiles"))))))
+                                   (directories `(,(string-append (current-source-directory) "/../dotfiles")))))
+                         (service home-gpg-agent-service-type
+                                  (home-gpg-agent-configuration
+                                   (pinentry-program (file-append pinentry-emacs "/bin/pinentry-emacs"))
+                                   (ssh-support? #t)
+                                   (default-cache-ttl 86400)
+                                   (max-cache-ttl 86400))))
                    %base-home-services)))
