@@ -126,7 +126,9 @@
 				                    (authorized-keys
 				                     `(("c4droid" ,(plain-file "c4droid" %person-key-c4droid))))))
                           (service elogind-service-type)
-                          (service openntpd-service-type))
+                          (service ntp-service-type
+                                   (ntp-configuration
+                                    (allow-large-adjustment? #t))))
 		            (modify-services %base-services
                       (guix-service-type config => (guix-configuration
                                                     (inherit config)
