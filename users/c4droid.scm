@@ -47,8 +47,7 @@
          "emacs-lispy"
          "emacs-lispyville"
          "emacs-rainbow-delimiters"
-         "emacs-pinentry"
-         "emacs-pass")))
+         "emacs-pinentry")))
 
 (define %develop
   (map specification->package+output
@@ -61,8 +60,7 @@
 (define %secrets
   (map specification->package+output
        '("gnupg"
-         "pinentry-emacs"
-         "password-store")))
+         "pinentry-emacs")))
 
 ;; Home services
 (define %emacs-daemon
