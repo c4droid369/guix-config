@@ -16,7 +16,7 @@
   #:use-module (gnu services)
   #:use-module (gnu services shepherd)
 
-  #:use-module (packages emacs-xyz))
+  #:use-module (c4droid packages emacs-xyz))
 
 ;; Package category
 (define %networking
