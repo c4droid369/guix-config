@@ -1,3 +1,6 @@
 [submodule "dotfiles"]
 	path = dotfiles
 	url = github:c4droid369/dotfiles
+[submodule "channels"]
+	path = channels
+	url = github:c4droid369/guix-channel
