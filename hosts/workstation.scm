@@ -3,7 +3,6 @@
   #:use-module (guix channels)
   #:use-module (guix utils)
 
-  #:use-module (gnu packages bash)
   #:use-module (gnu packages certs)
   #:use-module (gnu packages shells)
 
@@ -24,6 +23,17 @@
      "9edb3f66fd807b096b48283debdcddccfea34bad"
      (openpgp-fingerprint
       "BBB0 2DDF 2CEA F6A8 0D1D  E643 A2A0 6DF2 A33A 54FA")))))
+
+(define %custom-channel
+  (channel
+   (name 'c4droid-collection)
+   (url "https://github.com/c4droid369/guix-channel.git")
+   (branch "master")
+   (introduction
+    (make-channel-introduction
+     "7a5b8280aaffbcec24e2c9218ba61f9018d395a2"
+     (openpgp-fingerprint
+      "0537 CB43 8499 E001 1630  EE68 F3CA FCB6 3C1F C725")))))
 
 ;; Helper function
 (define* (btrfs-subvolume subvol mount-point #:key (options '()) (needed-for-boot? #f) (deps '()))
@@ -100,7 +110,7 @@
 		        (comment "Guix user")
 		        (group "users")
 		        (home-directory "/home/c4droid")
-		        (shell #~(string-append #$bash "/bin/bash"))
+		        (shell #~(string-append #$zsh "/bin/zsh"))
 		        (supplementary-groups '("wheel" "netdev" "input" "cdrom" "audio" "video" "tty")))
 	           %base-user-accounts))
   
@@ -132,4 +142,5 @@
 		            (modify-services %base-services
                       (guix-service-type config => (guix-configuration
                                                     (inherit config)
-                                                    (channels (list %guix-channel))))))))
+                                                    (channels (list %guix-channel
+                                                                    %custom-channel))))))))

@@ -1,6 +1,7 @@
 (define-module (users c4droid)
   #:use-module (guix gexp)
   #:use-module (guix utils)
+  #:use-module (guix channels)
 
   #:use-module (gnu home)
 
@@ -65,7 +66,7 @@
 
 (define %utility
   (map specification->package+output
-       '("ncurses" "tmux" "ripgrep" "fd")))
+       '("ncurses" "tmux" "ripgrep" "fd" "fzf")))
 
 (define %secrets
   (map specification->package+output
